@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { usePageTransition } from "@/components/layout/TransitionProvider";
 
 const SCRAMBLE_WORDS = ["Perform", "Convert", "Deliver", "Scale", "Engage"];
-const BG_IMAGES = ["/images/coder.jpg", "/images/git.jpg", "/images/me.jpg"];
+const BG_IMAGES = ["/images/sanjay3.png", "/images/sanjay2.png", "/images/sanji.png"];
 
 class TextScramble {
   private el: HTMLElement;

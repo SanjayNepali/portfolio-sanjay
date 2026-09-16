@@ -32,6 +32,7 @@ export default function Work() {
           scrub: 1.5,
           pin: true,
           anticipatePin: 1,
+          fastScrollEnd: true,
         },
       });
 
