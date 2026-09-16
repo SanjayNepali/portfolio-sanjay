@@ -1,26 +1,22 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-sans: var(--font-poppins);
+  --font-mono: var(--font-jetbrains-mono);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-ink: #0a0a0a;
+  --color-paper: #ffffff;
+  --color-sand: #f4efe6;
+  --color-accent: #ff4331;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-sand);
+  color: var(--color-ink);
+  cursor: url("/images/mouse-icon.svg") 0 0, auto;
+}
+
+a,
+button {
+  cursor: url("/images/pin-icon.svg") 0 0, pointer;
 }
