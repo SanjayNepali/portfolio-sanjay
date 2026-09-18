@@ -17,7 +17,7 @@ export const projects: Project[] = [
       "/images/mantra/checkout.png",
     ],
     description:
-      "A fan-engagement platform connecting celebrities and fans through content sharing, event bookings, and a points-based rewards system — with AI-based content moderation and personalized recommendations.",
+      "Mantra is a platform that helps celebrities connect with their fans through exclusive content, event bookings, and reward-based interactions. It also includes AI-powered content moderation and personalized recommendations to improve the user experience.",
     tech: ["Python", "Django", "JavaScript", "AI Moderation"],
     github: "https://github.com/SanjayNepali/MANTRA",
   },
@@ -30,7 +30,7 @@ export const projects: Project[] = [
       "/images/primetime/analytics.png",
     ],
     description:
-      "A real-time project management and communication platform for teams — WebSocket chat, sentiment analysis, and ML-powered resource recommendations, with dashboards tracking team stress levels and progress.",
+      "PrimeTime is a student collaboration and learning platform designed to improve communication and project management. It features real-time chat, learning analytics, sentiment analysis, and smart recommendations to help teams stay organized and productive.",
     tech: ["Django", "WebSocket", "TF-IDF", "Machine Learning"],
     github: "https://github.com/SanjayNepali/PrimeTime-Academic-System",
   },
@@ -43,7 +43,7 @@ export const projects: Project[] = [
       "/images/fittrack/personalized_meal_plan.png",
     ],
     description:
-      "A role-based gym membership management system with a BMI calculator, personalized workout recommendations, attendance tracking, and subscription handling for members and admins.",
+      "FitTrack is a gym management system that helps members track their fitness journey while giving administrators tools to manage memberships, subscriptions, and attendance. It also provides workout suggestions and meal planning support.",
     tech: ["PHP", "MySQL", "HTML/CSS"],
     github: "https://github.com/SanjayNepali/Fit-Track",
   },
@@ -55,9 +55,8 @@ export const projects: Project[] = [
       "/images/kiraya/landlord_page.png",
     ],
     description:
-      "A rental marketplace connecting landlords and tenants, with dedicated dashboards for listing properties and browsing available homes. Built for students looking for apartments near their campus — listings can be searched by college name — and it includes a built-in chat feature.",
-    // TODO: fill this in with the real stack.
-    tech: [],
+      "Kiraya is a rental marketplace that connects landlords with tenants looking for accommodation. Students can easily search for rooms and apartments near their college, while landlords can manage listings through a dedicated dashboard. The platform also includes an integrated chat system for direct communication.",
+    tech: ["PHP", "MySQL", "JavaScript", "HTML/CSS"],
     github: "https://github.com/SanjayNepali/Apartment-rental-website",
   },
 ];
