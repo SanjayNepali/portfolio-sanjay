@@ -50,10 +50,13 @@ export const projects: Project[] = [
   {
     name: "Kiraya",
     meta: "Rental marketplace",
-    images: ["/images/kiraya/home_page.png", "/images/kiraya/landlord_page.png"],
+    images: [
+      "/images/kiraya/home_page.png",
+      "/images/kiraya/landlord_page.png",
+    ],
     description:
-      "A rental marketplace connecting landlords and tenants, with dedicated dashboards for listing properties and browsing available homes. Consists of chat feature. This project is dedicated to students trying to find rental apartments near their colleges. Students can search apartments near thei college using college name.",
-    // TODO: confirm stack + fill in — guessed from context, not stated on the resume.
+      "A rental marketplace connecting landlords and tenants, with dedicated dashboards for listing properties and browsing available homes. Built for students looking for apartments near their campus — listings can be searched by college name — and it includes a built-in chat feature.",
+    // TODO: fill this in with the real stack.
     tech: [],
     github: "https://github.com/SanjayNepali/Apartment-rental-website",
   },

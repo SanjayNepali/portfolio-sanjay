@@ -3,20 +3,190 @@
 @theme inline {
   --font-sans: var(--font-poppins);
   --font-mono: var(--font-jetbrains-mono);
+}
 
+@theme {
   --color-ink: #0a0a0a;
   --color-paper: #ffffff;
   --color-sand: #f4efe6;
   --color-accent: #ff4331;
+
+  --color-moss: #689d6a;
+  --color-clay: #cc241d;
+  --color-ocean: #458588;
+  --color-amber: #d79921;
+  --color-plum: #b16286;
+  --color-rust: #d65d0e;
 }
 
-body {
-  background-color: var(--color-sand);
-  color: var(--color-ink);
-  cursor: url("/images/mouse-icon.svg") 0 0, auto;
+@layer base {
+  html {
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-paper);
+  }
 }
 
-a,
-button {
-  cursor: url("/images/pin-icon.svg") 0 0, pointer;
+@layer components {
+  .sticker {
+    --sticker-offset: 4px;
+    --sticker-bg: var(--color-paper);
+    --sticker-fg: var(--color-ink);
+    --sticker-shadow: var(--color-ink);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 2px solid var(--color-ink);
+    background-color: var(--sticker-bg);
+    color: var(--sticker-fg);
+    box-shadow: var(--sticker-offset) var(--sticker-offset) 0 0
+      var(--sticker-shadow);
+    transition-property: transform, box-shadow, background-color, color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sticker--sm {
+    --sticker-offset: 3px;
+  }
+
+  .sticker--paper {
+    --sticker-bg: var(--color-paper);
+    --sticker-fg: var(--color-ink);
+    --sticker-shadow: var(--color-ink);
+  }
+
+  .sticker--invert {
+    --sticker-bg: var(--color-paper);
+    --sticker-fg: var(--color-ink);
+    --sticker-shadow: var(--color-ink);
+  }
+
+  .sticker--amber {
+    --sticker-bg: var(--color-amber);
+    --sticker-fg: var(--color-ink);
+    --sticker-shadow: var(--color-clay);
+  }
+
+  .sticker--ocean {
+    --sticker-bg: var(--color-ocean);
+    --sticker-fg: var(--color-ink);
+    --sticker-shadow: var(--color-amber);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sticker:hover {
+      transform: translate(var(--sticker-offset), var(--sticker-offset));
+      box-shadow: 0 0 0 0 var(--sticker-shadow);
+    }
+
+    .sticker--paper:hover {
+      color: var(--color-accent);
+    }
+
+    .sticker--invert:hover {
+      background-color: var(--color-ink);
+      color: var(--color-paper);
+    }
+  }
+
+  .sticker:active {
+    transform: translate(var(--sticker-offset), var(--sticker-offset));
+    box-shadow: 0 0 0 0 var(--sticker-shadow);
+  }
+
+  .sticker:disabled,
+  .sticker[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .card-frame {
+    border: 2px solid var(--color-ink);
+    background-color: var(--color-paper);
+  }
+
+  .card-frame--amber {
+    box-shadow: 6px 6px 0 0 var(--color-amber);
+  }
+
+  .card-frame--ocean {
+    box-shadow: 6px 6px 0 0 var(--color-ocean);
+  }
+
+  .card-frame--ink {
+    box-shadow: 6px 6px 0 0 var(--color-ink);
+  }
+
+  @media (min-width: 640px) {
+    .card-frame--amber {
+      box-shadow: 8px 8px 0 0 var(--color-amber);
+    }
+    .card-frame--ocean {
+      box-shadow: 8px 8px 0 0 var(--color-ocean);
+    }
+    .card-frame--ink {
+      box-shadow: 10px 10px 0 0 var(--color-ink);
+    }
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 10000;
+    transform: translateY(-200%);
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--color-ink);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    transition: transform 150ms ease;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  flex-wrap: nowrap;
+  animation: marquee-scroll 26s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
 }

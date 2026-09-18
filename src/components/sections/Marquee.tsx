@@ -1,62 +1,26 @@
-"use client";
+import { marqueeItems } from "@/lib/data/site";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-
-const ITEMS = [
-  "Full Stack Web Dev",
-  "React & Next.js",
-  "Django & Python",
-  "MERN Stack",
-  "UI/UX Focused",
-];
-
+/**
+ * Server Component — zero client JavaScript. A CSS keyframe drives the
+ * scroll on the compositor and stops automatically under
+ * prefers-reduced-motion (see globals.css).
+ */
 export default function Marquee() {
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const track = trackRef.current;
-
-    if (!track) return;
-
-    // Animate exactly half the track's width (the un-duplicated portion),
-    // then snap back to 0 — since content is duplicated, the snap is invisible.
-    const tween = gsap.to(track, {
-      xPercent: -50,
-      duration: 20,
-      ease: "none",
-      repeat: -1,
-    });
-
-    return () => {
-      tween.kill();
-    };
-  }, []);
-
   return (
     <div
       aria-hidden="true"
-      className="overflow-hidden border-y-2 bg-black py-4"
-      style={{
-        borderColor: "#458588",
-      }}
+      className="overflow-hidden border-y-2 border-ocean bg-ink py-3 sm:py-4"
     >
-      <div ref={trackRef} className="flex w-max whitespace-nowrap">
-        {[0, 1].map((setIndex) => (
-          <div key={setIndex} className="flex items-center">
-            {ITEMS.map((item, index) => (
+      <div className="marquee__track">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex items-center">
+            {marqueeItems.map((item) => (
               <span
-                key={`${setIndex}-${index}`}
-                className="flex items-center font-sans text-2xl font-semibold uppercase tracking-tight text-white sm:text-4xl"
+                key={`${copy}-${item}`}
+                className="flex items-center whitespace-nowrap font-sans text-xl font-semibold uppercase tracking-tight text-paper sm:text-4xl"
               >
                 {item}
-
-                <span
-                  className="mx-6 sm:mx-10"
-                  style={{ color: "#458588" }}
-                >
-                  ●
-                </span>
+                <span className="mx-5 text-ocean sm:mx-10">●</span>
               </span>
             ))}
           </div>

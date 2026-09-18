@@ -4,38 +4,35 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useRef,
+  type ReactNode,
 } from "react";
-import gsap from "gsap";
+import { gsap, prefersReducedMotion } from "@/lib/animation/gsap";
+import { lockScroll } from "@/lib/animation/scroll-lock";
+import { useIsomorphicLayoutEffect } from "@/lib/animation/use-isomorphic-layout-effect";
 
 type TransitionColor = "ink" | "accent" | "sand";
 
-type RunTransitionOptions = {
-  color?: TransitionColor;
-  onCovered?: () => void;
-};
-
 type TransitionContextValue = {
-  runTransition: (options?: RunTransitionOptions) => void;
+  /** Cover the screen, jump to `href`, uncover. */
+  navigate: (href: string, color?: TransitionColor) => void;
 };
 
-const TransitionContext =
-  createContext<TransitionContextValue | null>(null);
+const TransitionContext = createContext<TransitionContextValue | null>(null);
 
 export function usePageTransition() {
   const ctx = useContext(TransitionContext);
 
   if (!ctx) {
-    throw new Error(
-      "usePageTransition must be used within TransitionProvider"
-    );
+    throw new Error("usePageTransition must be used within TransitionProvider");
   }
 
   return ctx;
 }
 
 const TILE_COUNT = 5;
+const COVER_DURATION = 0.45;
+const TILE_STAGGER = 0.06;
 
 const COLORS: Record<TransitionColor, string> = {
   ink: "var(--color-ink)",
@@ -43,97 +40,132 @@ const COLORS: Record<TransitionColor, string> = {
   sand: "var(--color-sand)",
 };
 
+/** Instant jump to a section. */
+function jumpToSection(href: string) {
+  const target = document.querySelector<HTMLElement>(href);
+  if (!target) return;
+
+  const top = target.getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: "auto" });
+
+  target.setAttribute("tabindex", "-1");
+  target.focus({ preventScroll: true });
+}
+
 export default function TransitionProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
-  const tilesRef = useRef<HTMLDivElement[]>([]);
-  const introPlayed = useRef(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const tilesRef = useRef<(HTMLDivElement | null)[]>([]);
   const animating = useRef(false);
 
-  const setTileRef = useCallback(
-    (el: HTMLDivElement | null, index: number) => {
-      if (el) tilesRef.current[index] = el;
-    },
-    []
-  );
+  useIsomorphicLayoutEffect(() => {
+    const tiles = tilesRef.current.filter(Boolean);
+    if (tiles.length === 0) return;
 
-  useEffect(() => {
-    if (introPlayed.current) return;
+    if (prefersReducedMotion()) {
+      gsap.set(tiles, { scaleX: 0 });
+      return;
+    }
 
-    introPlayed.current = true;
+    const ctx = gsap.context(() => {
+      gsap.set(tiles, {
+        scaleX: 1,
+        transformOrigin: "left",
+        backgroundColor: COLORS.ink,
+      });
 
-    const tiles = tilesRef.current;
-
-    gsap.set(tiles, {
-      scaleX: 1,
-      transformOrigin: "left",
-      backgroundColor: COLORS.ink,
+      gsap.to(tiles, {
+        scaleX: 0,
+        ease: "power3.inOut",
+        duration: 0.6,
+        stagger: 0.1,
+      });
     });
 
-    gsap.to(tiles, {
-      scaleX: 0,
-      ease: "power3.inOut",
-      duration: 0.6,
-      stagger: 0.12,
-    });
+    return () => ctx.revert();
   }, []);
 
-  const runTransition = useCallback(
-    (options?: RunTransitionOptions) => {
+  const navigate = useCallback(
+    (href: string, color: TransitionColor = "accent") => {
       if (animating.current) return;
+
+      if (prefersReducedMotion()) {
+        jumpToSection(href);
+        return;
+      }
+
+      const tiles = tilesRef.current.filter(Boolean);
+      const overlay = overlayRef.current;
+      if (tiles.length === 0 || !overlay) {
+        jumpToSection(href);
+        return;
+      }
 
       animating.current = true;
 
-      const color = COLORS[options?.color ?? "accent"];
-      const tiles = tilesRef.current;
+      const releaseScroll = lockScroll();
+      overlay.style.pointerEvents = "auto";
 
-      const tl = gsap.timeline({
-        onComplete: () => {
-          animating.current = false;
-        },
-      });
+      let released = false;
+      const release = () => {
+        if (released) return;
+        released = true;
+        releaseScroll();
+        overlay.style.pointerEvents = "none";
+      };
 
-      tl.set(tiles, {
-        scaleX: 0,
-        transformOrigin: "left",
-        backgroundColor: color,
-      })
-        .to(tiles, {
-          scaleX: 1,
-          duration: 0.55,
-          ease: "power3.inOut",
-          stagger: 0.1,
-        })
-        .call(() => {
-          options?.onCovered?.();
+      gsap
+        .timeline({
+          onComplete: () => {
+            animating.current = false;
+            release();
+          },
+          onInterrupt: release,
         })
         .set(tiles, {
-          transformOrigin: "right",
+          scaleX: 0,
+          transformOrigin: "left",
+          backgroundColor: COLORS[color],
         })
         .to(tiles, {
-          scaleX: 0,
-          duration: 0.55,
+          scaleX: 1,
+          duration: COVER_DURATION,
           ease: "power3.inOut",
-          stagger: 0.1,
+          stagger: TILE_STAGGER,
+        })
+        .call(() => {
+          jumpToSection(href);
+          release();
+        })
+        .set(tiles, { transformOrigin: "right" })
+        .to(tiles, {
+          scaleX: 0,
+          duration: COVER_DURATION,
+          ease: "power3.inOut",
+          stagger: TILE_STAGGER,
         });
     },
     []
   );
 
   return (
-    <TransitionContext.Provider value={{ runTransition }}>
-      <div className="pointer-events-none fixed inset-0 z-[9999]">
+    <TransitionContext.Provider value={{ navigate }}>
+      <div
+        ref={overlayRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-0 z-[9999]"
+      >
         {Array.from({ length: TILE_COUNT }).map((_, i) => (
           <div
             key={i}
-            ref={(el) => setTileRef(el, i)}
-            className="absolute left-0 w-full bg-ink"
-            style={{
-              top: `${i * 20}%`,
-              height: "20%",
+            ref={(el) => {
+              tilesRef.current[i] = el;
             }}
+            className="absolute left-0 w-full bg-ink"
+            style={{ top: `${i * 20}%`, height: "20.2%" }}
           />
         ))}
       </div>

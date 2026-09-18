@@ -1,3 +1,5 @@
+import { siteConfig } from "./site";
+
 export type NavLink = {
   label: string;
   href: string;
@@ -39,15 +41,22 @@ export const socialLinks: SocialLink[] = [
   },
   {
     label: "Gmail",
-    // TODO: replace with your real address
-    href: "mailto:sanjinep.dev@gmail.com",
+    href: `mailto:${siteConfig.email}`,
     icon: "/images/gmail-icon.svg",
   },
   {
     label: "Resume",
-    // TODO: confirm resume.pdf lives in /public
     href: "/resume.pdf",
     icon: "/images/resume-icon.svg",
     external: true,
   },
 ];
+
+/** Everything except the resume PDF — used for the icon-only social rows. */
+export const iconSocialLinks = socialLinks.filter(
+  (social) => social.label !== "Resume"
+);
+
+export const resumeLink = socialLinks.find(
+  (social) => social.label === "Resume"
+);
