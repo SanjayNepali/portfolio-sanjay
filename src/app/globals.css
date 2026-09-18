@@ -190,3 +190,22 @@
     animation: none;
   }
 }
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-width: 0;
+    overflow-x: clip;
+    background-color: var(--color-sand);
+    color: var(--color-ink);
+  }
+}

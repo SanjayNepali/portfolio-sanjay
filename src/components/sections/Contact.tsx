@@ -14,45 +14,47 @@ import { socialLinks } from "@/lib/data/navigation";
  */
 function ContactInfo() {
   return (
-    <div className="card-frame card-frame--ocean w-full max-w-lg p-6 motion-safe:md:max-w-sm sm:p-8">
-      <div className="flex items-center gap-2">
+    <div className="card-frame card-frame--ocean box-border min-w-0 w-full max-w-lg p-5 sm:p-8 motion-safe:md:max-w-sm">
+      <div className="flex min-w-0 items-center gap-2">
         <Image
           src="/images/logo.svg"
           alt="Sanjay Nepali"
           width={100}
           height={32}
-          className="h-8 w-auto"
+          className="h-8 w-auto max-w-full shrink"
         />
+
         <Image
           src="/images/logo-icon.svg"
           alt=""
           aria-hidden="true"
           width={32}
           height={32}
-          className="h-8 w-auto"
+          className="h-8 w-8 shrink-0"
         />
       </div>
 
-      <div className="mt-8">
+      <div className="mt-8 min-w-0">
         <h3 className="font-sans text-3xl font-semibold uppercase leading-[0.95] tracking-tight text-ink sm:text-4xl">
           Let&apos;s Work
           <br />
           Together
         </h3>
+
         <p className="mt-4 max-w-[20rem] font-sans text-sm leading-relaxed text-ink/60 sm:text-base">
           Got a project, a role, or just a good idea? I&apos;m always up for a
           conversation.
         </p>
       </div>
 
-      <ul className="mt-8 flex flex-col gap-1">
+      <ul className="mt-8 flex min-w-0 flex-col gap-1">
         {socialLinks.map((social) => (
-          <li key={social.label}>
+          <li key={social.label} className="min-w-0">
             <a
               href={social.href}
               target={social.external ? "_blank" : undefined}
               rel={social.external ? "noopener noreferrer" : undefined}
-              className="flex items-center gap-3 py-2 font-mono text-sm uppercase tracking-wide text-accent transition-opacity hover:opacity-70"
+              className="flex min-w-0 items-center gap-3 py-2 font-mono text-sm uppercase tracking-wide text-accent transition-opacity hover:opacity-70"
             >
               <Image
                 src={social.icon}
@@ -60,8 +62,10 @@ function ContactInfo() {
                 aria-hidden="true"
                 width={20}
                 height={20}
+                className="h-5 w-5 shrink-0"
               />
-              {social.label}
+
+              <span className="min-w-0 break-words">{social.label}</span>
             </a>
           </li>
         ))}
@@ -85,16 +89,24 @@ export default function Contact() {
         const { isDesktop } = context.conditions as MatchMediaConditions;
 
         /*
-         * MOBILE: nothing is pinned and nothing starts hidden — the section
-         * is simply the top of a normal, scrollable section.
+         * MOBILE:
+         * No pinning and no hidden content. The entire contact section
+         * remains naturally scrollable.
          */
         if (!isDesktop) return;
 
         if (introRef.current) {
-          gsap.set(introRef.current, { autoAlpha: 1, yPercent: 0 });
+          gsap.set(introRef.current, {
+            autoAlpha: 1,
+            yPercent: 0,
+          });
         }
+
         if (contentRef.current) {
-          gsap.set(contentRef.current, { autoAlpha: 0, y: 24 });
+          gsap.set(contentRef.current, {
+            autoAlpha: 0,
+            y: 24,
+          });
         }
 
         if (sectionRef.current) {
@@ -140,13 +152,26 @@ export default function Contact() {
         if (introRef.current) {
           tl.to(
             introRef.current,
-            { yPercent: -60, autoAlpha: 0, duration: 0.4, ease: "none" },
+            {
+              yPercent: -60,
+              autoAlpha: 0,
+              duration: 0.4,
+              ease: "none",
+            },
             0
           );
         }
 
         if (contentRef.current) {
-          tl.to(contentRef.current, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.15);
+          tl.to(
+            contentRef.current,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.4,
+            },
+            0.15
+          );
         }
       },
       sectionRef
@@ -180,7 +205,7 @@ export default function Contact() {
 
       <div
         ref={contentRef}
-        className="relative z-20 flex w-full flex-col items-center gap-10 px-5 pb-20 motion-safe:md:absolute motion-safe:md:inset-0 motion-safe:md:flex-row motion-safe:md:items-center motion-safe:md:justify-center motion-safe:md:gap-12 motion-safe:md:px-12 motion-safe:md:pb-0 motion-safe:md:opacity-0 lg:gap-16"
+        className="relative z-20 mx-auto flex min-w-0 w-full max-w-6xl flex-col items-center gap-10 px-5 pb-20 sm:px-8 motion-safe:md:absolute motion-safe:md:inset-0 motion-safe:md:flex-row motion-safe:md:items-center motion-safe:md:justify-center motion-safe:md:gap-12 motion-safe:md:px-12 motion-safe:md:pb-0 motion-safe:md:opacity-0 lg:gap-16"
       >
         <ContactForm />
         <ContactInfo />

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { MEDIA } from "@/lib/animation/gsap";
 
 const INTERVAL_MS = 800;
+const FADE_MS = 500;
 
 type HeroPortraitProps = {
   images: readonly string[];
@@ -30,7 +31,11 @@ export default function HeroPortrait({ images }: HeroPortraitProps) {
 
       setState((prev) => {
         const next = (prev.index + 1) % images.length;
-        return { index: next, seen: Math.max(prev.seen, next) };
+
+        return {
+          index: next,
+          seen: Math.max(prev.seen, next),
+        };
       });
     }, INTERVAL_MS);
 
@@ -49,9 +54,12 @@ export default function HeroPortrait({ images }: HeroPortraitProps) {
             fill
             sizes="(max-width: 1024px) 82vw, 320px"
             priority={i === 0}
-            className={`object-cover transition-opacity duration-200 ${
+            className={`object-cover transition-opacity ease-in-out ${
               i === index ? "opacity-100" : "opacity-0"
             }`}
+            style={{
+              transitionDuration: `${FADE_MS}ms`,
+            }}
           />
         ) : null
       )}

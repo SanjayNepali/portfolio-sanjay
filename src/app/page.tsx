@@ -8,6 +8,12 @@ import Contact from "@/components/sections/Contact";
 import Footer from "@/components/sections/Footer";
 
 export default function Home() {
+  // Computed once, here, on the server — Footer is a Client Component
+  // again (for the scroll reveal) but never calls `new Date()` itself,
+  // so there's no risk of the year differing between a server render and
+  // a client render across midnight.
+  const year = new Date().getFullYear();
+  
   return (
     <>
       <Navbar />
@@ -32,7 +38,7 @@ export default function Home() {
         </section>
       </main>
 
-      <Footer />
+      <Footer year={year} />
     </>
   );
 }

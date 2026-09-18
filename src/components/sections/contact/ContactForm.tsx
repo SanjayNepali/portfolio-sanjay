@@ -5,13 +5,14 @@ import { StickerButton } from "@/components/ui/Sticker";
 import { siteConfig } from "@/lib/data/site";
 
 const FIELD_CLASS =
-  "border-2 border-ink bg-white px-4 py-3 font-sans text-base text-ink placeholder:text-ink/35 outline-none transition-colors focus:bg-sand/40 sm:text-sm";
+  "box-border block min-w-0 w-full max-w-full border-2 border-ink bg-white px-4 py-3 font-sans text-base text-ink placeholder:text-ink/35 outline-none transition-colors focus:bg-sand/40 sm:text-sm";
 
 const LABEL_CLASS = "font-mono text-xs uppercase tracking-wide text-ink/50";
 
 /**
  * Manga-panel treatment: thick outer rule + solid black offset shadow
  * wrapping a thinner inner rule, plus a halftone screentone corner.
+ *
  * Submitting builds a mailto: link, so no backend is required.
  */
 export default function ContactForm() {
@@ -21,13 +22,18 @@ export default function ContactForm() {
     subject: "",
     message: "",
   });
+
   const [status, setStatus] = useState("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,6 +41,7 @@ export default function ContactForm() {
 
     const subject =
       formData.subject.trim() || `Portfolio inquiry from ${formData.name}`;
+
     const body = `${formData.message}\n\n—\n${formData.name}\n${formData.email}`;
 
     setStatus("Opening your email app…");
@@ -45,8 +52,8 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="card-frame card-frame--ink relative w-full max-w-lg border-[3px] p-1.5">
-      <div className="relative overflow-hidden border-2 border-ink bg-paper p-5 sm:p-8">
+    <div className="card-frame card-frame--ink relative box-border min-w-0 w-full max-w-lg border-[3px] p-1.5">
+      <div className="relative min-w-0 overflow-hidden border-2 border-ink bg-paper p-5 sm:p-8">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-10 -top-10 z-0 h-40 w-40 rotate-12 opacity-[0.08]"
@@ -57,21 +64,26 @@ export default function ContactForm() {
           }}
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10 min-w-0">
           <h3 className="font-sans text-2xl font-semibold uppercase tracking-tight text-ink sm:text-3xl">
             Write me
           </h3>
-          <p className="mt-2 font-sans text-sm leading-relaxed text-ink/60 sm:text-base">
+
+          <p className="mt-2 max-w-full font-sans text-sm leading-relaxed text-ink/60 sm:text-base">
             Got a project, a role, or just a question? Send it through and
             I&apos;ll get back to you.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="flex flex-col gap-1.5">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-6 flex min-w-0 flex-col gap-4"
+          >
+            <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="flex min-w-0 flex-col gap-1.5">
                 <label htmlFor="contact-name" className={LABEL_CLASS}>
                   Your Name
                 </label>
+
                 <input
                   id="contact-name"
                   name="name"
@@ -85,10 +97,11 @@ export default function ContactForm() {
                 />
               </div>
 
-              <div className="flex flex-col gap-1.5">
+              <div className="flex min-w-0 flex-col gap-1.5">
                 <label htmlFor="contact-email" className={LABEL_CLASS}>
                   Email
                 </label>
+
                 <input
                   id="contact-email"
                   name="email"
@@ -103,10 +116,11 @@ export default function ContactForm() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="flex min-w-0 flex-col gap-1.5">
               <label htmlFor="contact-subject" className={LABEL_CLASS}>
                 Subject
               </label>
+
               <input
                 id="contact-subject"
                 name="subject"
@@ -118,10 +132,11 @@ export default function ContactForm() {
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
+            <div className="flex min-w-0 flex-col gap-1.5">
               <label htmlFor="contact-message" className={LABEL_CLASS}>
                 The Story
               </label>
+
               <textarea
                 id="contact-message"
                 name="message"
@@ -134,15 +149,19 @@ export default function ContactForm() {
               />
             </div>
 
-            <div className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-2 flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <span
-                className="font-mono text-[11px] uppercase tracking-wide text-ink/40"
+                className="min-w-0 max-w-full font-mono text-[11px] uppercase tracking-wide text-ink/40"
                 aria-live="polite"
               >
                 {status || "Opens your email app to send"}
               </span>
 
-              <StickerButton type="submit" tone="invert">
+              <StickerButton
+                type="submit"
+                tone="invert"
+                className="w-full shrink-0 sm:w-auto"
+              >
                 Send The Letter
                 <span aria-hidden="true">↗</span>
               </StickerButton>
